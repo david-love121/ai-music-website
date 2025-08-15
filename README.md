@@ -41,6 +41,27 @@ BASE_PATH=/ai-music-website npm run build
 
 The app loads default tracks by fetching `/music-dir/manifest.json` and then referencing each file under `/music-dir/<name>`; no server endpoints are required.
 
+### Automatic deploy with GitHub Actions
+
+This repository includes a GitHub Pages workflow (`.github/workflows/deploy.yml`). On each push to `main` it:
+
+1. Installs dependencies (`npm ci`).
+2. Regenerates the audio manifest (`npm run gen:manifest`).
+3. Builds the site with `BASE_PATH=/<repo>` so assets resolve correctly at `https://<user>.github.io/<repo>/`.
+4. Publishes the `build/` output to GitHub Pages.
+
+Setup steps (one‑time):
+- In GitHub: Settings → Pages → set Source to "GitHub Actions".
+- Push to `main` (or dispatch the workflow manually) to generate the first deployment.
+
+If you later host at a root user/org site (e.g. `username.github.io`), remove the base path by building with an empty `BASE_PATH`:
+
+```bash
+BASE_PATH= npm run build
+```
+
+You can manually run the workflow from the Actions tab ("Deploy to GitHub Pages").
+
 ## Styling with TailwindCSS
 
 This project uses TailwindCSS via the official PostCSS plugin.
