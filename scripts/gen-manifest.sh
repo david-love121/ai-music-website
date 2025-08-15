@@ -15,9 +15,17 @@ if [[ ! -d "$MUSIC_DIR" ]]; then
 fi
 
 # Collect files (non-recursive) and sort
-mapfile -t FILES < <(find "$MUSIC_DIR" -maxdepth 1 -type f \
-  \( -iname '*.wav' -o -iname '*.mp3' -o -iname '*.ogg' -o -iname '*.m4a' -o -iname '*.flac' \) \
-  -printf '%f\n' | sort)
+# Collect and naturally sort (so song2.mp3 comes before song10.mp3)
+if sort -V </dev/null >/dev/null 2>&1; then
+  mapfile -t FILES < <(find "$MUSIC_DIR" -maxdepth 1 -type f \
+    \( -iname '*.wav' -o -iname '*.mp3' -o -iname '*.ogg' -o -iname '*.m4a' -o -iname '*.flac' \) \
+    -printf '%f\n' | sort -V)
+else
+  # Fallback: plain sort (lexicographic)
+  mapfile -t FILES < <(find "$MUSIC_DIR" -maxdepth 1 -type f \
+    \( -iname '*.wav' -o -iname '*.mp3' -o -iname '*.ogg' -o -iname '*.m4a' -o -iname '*.flac' \) \
+    -printf '%f\n' | sort)
+fi
 
 echo "Writing manifest with ${#FILES[@]} entries -> $OUT_FILE"
 
