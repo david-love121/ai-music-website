@@ -1,0 +1,54 @@
+@import "tailwindcss";
+@reference "tailwindcss";
+
+/* CSS variables for dynamic theming */
+:root {
+  /* HSL triplets work great with Tailwind when used as hsl(var(--brand)) */
+  --brand: 252 82% 67%;
+  --brand-foreground: 0 0% 100%;
+
+  /* Component radius */
+  --radius: 0.75rem;
+
+  /* Gradient stops used by a custom utility */
+  --gradient-start: #667eea; /* indigo-400-ish */
+  --gradient-end: #764ba2;   /* purple-500-ish */
+}
+
+/* Optional dark theme override example */
+[data-theme="dark"] {
+  --brand: 252 90% 75%;
+}
+
+/* Custom utilities for unique, reusable styles */
+@layer utilities {
+  .custom-gradient {
+    background: linear-gradient(
+      135deg,
+      var(--gradient-start) 0%,
+      var(--gradient-end) 100%
+    );
+  }
+
+  /* Helpers that use CSS variables directly with Tailwind */
+  .bg-brand {
+    background-color: hsl(var(--brand));
+  }
+  .text-brand {
+    color: hsl(var(--brand));
+  }
+}
+
+/* Component-level patterns using @apply (use sparingly) */
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 font-medium text-white transition-colors;
+    /* Use a variable-driven radius directly */
+    border-radius: var(--radius);
+    background-color: hsl(var(--brand));
+  }
+
+  .card {
+    @apply rounded-lg border border-black/10 bg-white/70 p-4 shadow-sm backdrop-blur;
+  }
+}
